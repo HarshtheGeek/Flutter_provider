@@ -128,3 +128,58 @@ Consumer<CountProvider>(
 
 ---
 
+## What is `Consumer`?
+
+`Consumer` is a widget provided by the [`provider`](https://pub.dev/packages/provider) package in Flutter.
+It **listens** to changes in a provider and **rebuilds only the widget inside it** when the data changes.
+
+---
+
+## Why Use `Consumer`?
+
+* To access the latest data from a provider.
+* To rebuild only a **specific part of the UI** instead of the whole widget.
+* Improves performance by reducing unnecessary rebuilds.
+
+---
+
+## Simple Usage
+
+```dart
+Consumer<CountProvider>(
+  builder: (context, countProvider, child) {
+    return Text('Count: ${countProvider.count}');
+  },
+)
+```
+
+### 🔍 Explanation
+
+| Part                      | Description                                                            |
+| ------------------------- | ---------------------------------------------------------------------- |
+| `Consumer<CountProvider>` | Tells Flutter to listen to the `CountProvider`.                        |
+| `builder:`                | A function that returns a widget every time the value updates.         |
+| `context`                 | The widget's context.                                                  |
+| `countProvider`           | The actual provider instance you can use to read data or call methods. |
+| `child`                   | A constant part of the UI that doesn't rebuild (optional).             |
+
+---
+
+## 🧾 Summary
+
+| Feature     | Description                                    |
+| ----------- | ---------------------------------------------- |
+| `Consumer`  | Listens to changes in a provider.              |
+| `builder`   | Builds the widget every time the data changes. |
+| Performance | Only the widget inside `Consumer` rebuilds.    |
+
+---
+
+**Tip:** Use `listen: false` with `Provider.of<T>` when you want to **call a method** but don’t want the widget to rebuild.
+
+```dart
+Provider.of<CountProvider>(context, listen: false).setCount();
+```
+
+
+
