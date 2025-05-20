@@ -182,4 +182,134 @@ Provider.of<CountProvider>(context, listen: false).setCount();
 ```
 
 
+# Flutter Provider: SingleProvider vs MultiProvider
+
+
+## SingleProvider
+
+A **SingleProvider** means using the `ChangeNotifierProvider` (or any other provider type) to provide a single object (or model) to the widget tree.
+
+### Use Case:
+When your app only needs one state model or business logic class.
+
+### Example:
+```dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => CounterModel(),
+      child: MyApp(),
+    ),
+  );
+}
+
+class CounterModel extends ChangeNotifier {
+  int _count = 0;
+
+  int get count => _count;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final counter = Provider.of<CounterModel>(context);
+
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text("SingleProvider Example")),
+        body: Center(child: Text('Count: ${counter.count}')),
+        floatingActionButton: FloatingActionButton(
+          onPressed: counter.increment,
+          child: Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+}
+````
+
+---
+
+## MultiProvider
+
+**MultiProvider** is used when you need to provide multiple models or services to the widget tree.
+
+### Use Case:
+
+When your app uses more than one provider or state model (e.g., user info, theme settings, counter state, etc.).
+
+### Example:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CounterModel()),
+        ChangeNotifierProvider(create: (_) => ThemeModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
+
+class CounterModel extends ChangeNotifier {
+  int _count = 0;
+
+  int get count => _count;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+}
+
+class ThemeModel extends ChangeNotifier {
+  bool _isDark = false;
+
+  bool get isDark => _isDark;
+
+  void toggleTheme() {
+    _isDark = !_isDark;
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final counter = Provider.of<CounterModel>(context);
+    final theme = Provider.of<ThemeModel>(context);
+
+    return MaterialApp(
+      theme: theme.isDark ? ThemeData.dark() : ThemeData.light(),
+      home: Scaffold(
+        appBar: AppBar(title: Text("MultiProvider Example")),
+        body: Center(child: Text('Count: ${counter.count}')),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            counter.increment();
+            theme.toggleTheme();
+          },
+          child: Icon(Icons.refresh),
+        ),
+      ),
+    );
+  }
+}
+```
+
+
+
 
