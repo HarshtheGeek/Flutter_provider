@@ -164,21 +164,66 @@ class MyWidget extends ConsumerWidget {
 
 ---
 
-## TL;DR
+# Difference Between `ref.watch` and `ref.read` in Riverpod
 
-* `ConsumerWidget` lets you **read Riverpod providers** in the UI
-* Use `ref.watch(...)` to get the value
-* The widget **rebuilds** when the provider value changes
+In Riverpod, we use the `ref` object to interact with providers. The most common methods are:
+
+- ✅ `ref.watch(...)` – **Listens to the provider** (rebuilds UI on change)
+- ✅ `ref.read(...)` – **Reads the value once** (no rebuild)
+---
+
+## `ref.watch()` – Reactive
+
+```dart
+final counterProvider = StateProvider<int>((ref) => 0);
+
+class MyWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(counterProvider);
+    return Text('Count: $count');
+  }
+}
+````
+
+### Use When:
+
+* You want the widget to rebuild automatically when the value changes
+* Good for UI display
 
 ---
 
-## Want More?
+## `ref.read()` – One-Time Read
 
-* Compare `ConsumerWidget` vs `Consumer`
-* Use `ConsumerStatefulWidget` for stateful widgets
-* Try it with `StateProvider`, `FutureProvider`, and more
-
+```dart
+ElevatedButton(
+  onPressed: () {
+    final counter = ref.read(counterProvider.notifier);
+    counter.state++; // Write to the provider
+  },
+  child: Text('Increment'),
+);
 ```
+
+### Use When:
+
+* You need the value **once**, like in a button or init method
+* You want to **update** the provider
+
+# `ConsumerWidget` vs `ConsumerStatefulWidget` in Riverpod
+
+| Feature                     | `ConsumerWidget`                 | `ConsumerStatefulWidget`          |
+|-----------------------------|----------------------------------|-----------------------------------|
+| **Stateless or Stateful?**  | Stateless                        | Stateful                          |
+| **Can use `ref.watch`?**    | ✅ Yes                           | ✅ Yes                            |
+| **Can use `setState`?**     | ❌ No                            | ✅ Yes                            |
+| **Has `initState`, `dispose`?** | ❌ No                        | ✅ Yes                            |
+| **When to use**             | For reactive UI only             | For UI + local state management   |
+
+---
+
+
+
 
 
 
