@@ -1,7 +1,3 @@
-Here is your refactored and professionally organized Flutter Riverpod documentation in GitHub-style Markdown format:
-
----
-
 # Flutter Riverpod Notes
 
 This repository contains structured notes and examples on using **Riverpod** for state management in Flutter, including concepts like `copyWith`, various provider types, and widgets like `ConsumerWidget`.
