@@ -2,30 +2,6 @@
 
 This repository contains structured notes and examples on using **Riverpod** for state management in Flutter, including concepts like `copyWith`, various provider types, and widgets like `ConsumerWidget`.
 
----
-
-## Table of Contents
-
-1. [Understanding `copyWith`](#understanding-copywith)
-2. [Riverpod Basics](#riverpod-basics)
-
-   * [Provider](#provider)
-   * [StateProvider](#stateprovider)
-   * [ProviderScope](#providerscope)
-3. [Widgets](#widgets)
-
-   * [ConsumerWidget](#consumerwidget)
-   * [ConsumerStatefulWidget](#consumerstatefulwidget)
-4. [Working with `ref`](#working-with-ref)
-
-   * [`ref.watch`](#refwatch)
-   * [`ref.read`](#refread)
-5. [Advanced State Management](#advanced-state-management)
-
-   * [StateNotifierProvider](#statenotifierprovider)
-
----
-
 ## Understanding `copyWith`
 
 `copyWith` is a common method used to create modified copies of immutable objects in Dart.
