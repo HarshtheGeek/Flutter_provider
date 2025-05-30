@@ -266,3 +266,66 @@ ref.read(counterNotifierProvider.notifier).increment();
 * Ideal for separating logic from UI.
 
 ---
+# `FutureProvider` in Riverpod
+
+## What is `FutureProvider`?
+
+`FutureProvider` is a type of provider in Riverpod used to expose asynchronous data (`Future<T>`) to the widget tree. It simplifies managing `loading`, `data`, and `error` states without writing boilerplate code.
+
+## When to Use
+
+Use `FutureProvider` when you:
+
+* Need to fetch data from a remote API
+* Perform asynchronous file or database operations
+* Want to manage a simple async lifecycle in the UI
+
+---
+
+## Example
+
+### 1. Define the Provider
+
+```dart
+// providers/user_provider.dart
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final userProvider = FutureProvider<String>((ref) async {
+  // Simulate a delay like an API call
+  await Future.delayed(Duration(seconds: 2));
+  return "Harsh";
+});
+```
+
+---
+
+### 2. Use the Provider in the UI
+
+```dart
+// widgets/user_widget.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/user_provider.dart';
+
+class UserWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userAsync = ref.watch(userProvider);
+
+    return userAsync.when(
+      data: (name) => Text('Hello, $name'),
+      loading: () => CircularProgressIndicator(),
+      error: (error, stack) => Text('Error: $error'),
+    );
+  }
+}
+```
+
+---
+
+## Notes
+
+* `ref.watch(userProvider)` listens to the future.
+* The `when` method helps to handle all possible states cleanly: loading, success (`data`), and error.
+
+---
