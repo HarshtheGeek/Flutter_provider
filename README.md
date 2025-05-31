@@ -460,3 +460,80 @@ final autoDisposeStreamProvider = StreamProvider.autoDispose<int>((ref) {
 * Timer and stopwatch
 
 ---
+## `ref.invalidate()` in Riverpod
+
+### What is `ref.invalidate()`?
+
+`ref.invalidate(provider)` tells Riverpod to:
+
+* **Dispose** the current instance of the provider.
+* **Recreate** it the next time it is accessed.
+
+In simple terms, it's like telling Riverpod:
+
+> "Forget everything about this provider and start fresh."
+
+---
+
+### When to Use It
+
+You might use `ref.invalidate()` when:
+
+* You want to **force a refresh** (like re-fetching from an API).
+* You need to **reset the internal state** of a `StateNotifier`, `AsyncNotifier`, or `StreamNotifier`.
+* You want to **restart a stream** or force a rebuild of dependent logic.
+
+---
+
+### Example 1: Invalidating a StreamNotifier
+
+```dart
+ref.invalidate(stockPriceNotifier);
+```
+
+This cancels the current stream and restarts the `StockPriceNotifier` the next time it is accessed.
+
+---
+
+### Example 2: Using in a Button
+
+```dart
+ElevatedButton(
+  onPressed: () {
+    ref.invalidate(stockPriceNotifier);
+  },
+  child: Text('Refresh Price Stream'),
+)
+```
+
+This button, when pressed, will reset the `stockPriceNotifier`, causing it to restart and emit values from scratch.
+
+---
+
+### Behavior Summary
+
+| Feature                 | Description                                          |
+| ----------------------- | ---------------------------------------------------- |
+| Disposes Provider       | Yes                                                  |
+| Rebuilds on Next Access | Yes                                                  |
+| Resets Internal State   | Yes                                                  |
+| Common Use Cases        | Refreshing data, restarting streams, resetting state |
+
+---
+
+### Notes
+
+* `ref.invalidate()` is a **manual way to reset a provider**, which can be useful in user-triggered actions or error recovery.
+* It does **not** immediately rebuild UI. Instead, the next `ref.watch()` triggers the fresh build.
+* If you want to refresh and get the new value right away, consider using:
+
+```dart
+ref.refresh(provider);
+```
+
+This is shorthand for:
+```dart
+ref.invalidate(provider);
+ref.watch(provider);
+```
+---
