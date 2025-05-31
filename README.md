@@ -320,12 +320,125 @@ class UserWidget extends ConsumerWidget {
   }
 }
 ```
+---
+
+# `StreamProvider` in Riverpod (Flutter)
+
+## Overview
+
+`StreamProvider` is part of the state management package for Flutter. It is used to expose a `Stream<T>` to the widget tree and reactively listen to asynchronous data changes over time.
+
+Typical use cases include:
+
+* Realtime updates (e.g., Firebase Firestore `snapshots()`)
+* WebSocket communication
+* Timers and clocks
+* Sensor or hardware feeds
 
 ---
 
-## Notes
+## What is `StreamProvider`?
 
-* `ref.watch(userProvider)` listens to the future.
-* The `when` method helps to handle all possible states cleanly: loading, success (`data`), and error.
+`StreamProvider<T>` allows you to bind a stream to the UI and automatically manage its lifecycle.
+
+### Key Benefits
+
+* **Reactive**: Emits new UI states based on stream output
+* **State-aware**: Manages loading, data, and error states using `AsyncValue<T>`
+* **Lifecycle-aware**: Automatically disposes the stream when not used
+* **Testable**: Easy to mock in unit or widget tests
+
+---
+
+## Syntax
+
+```dart
+final myStreamProvider = StreamProvider<int>((ref) {
+  return Stream.periodic(Duration(seconds: 1), (count) => count);
+});
+```
+
+This provider emits an incrementing integer every second.
+
+---
+
+## Understanding `AsyncValue<T>`
+
+When you consume a `StreamProvider`, you get an `AsyncValue<T>` which has three states:
+
+* `AsyncLoading` – while waiting for the stream to emit the first value
+* `AsyncData<T>` – when a new value is received
+* `AsyncError` – if an error occurs
+
+You typically handle these with `.when`:
+
+```dart
+final value = ref.watch(myStreamProvider);
+
+value.when(
+  data: (val) => Text('Value: $val'),
+  loading: () => CircularProgressIndicator(),
+  error: (e, st) => Text('Error: $e'),
+);
+```
+
+---
+
+## Full Example
+
+### Step 1: Define the Provider
+
+```dart
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final timeStreamProvider = StreamProvider<DateTime>((ref) {
+  return Stream.periodic(
+    Duration(seconds: 1),
+    (_) => DateTime.now(),
+  );
+});
+```
+
+### Step 2: Consume in the UI
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class TimeWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final time = ref.watch(timeStreamProvider);
+
+    return time.when(
+      data: (value) => Text('Current time: ${value.toLocal()}'),
+      loading: () => CircularProgressIndicator(),
+      error: (err, _) => Text('Error: $err'),
+    );
+  }
+}
+```
+
+---
+
+## AutoDispose Version
+
+You can make the stream auto-cancel when the widget is removed:
+
+```dart
+final autoDisposeStreamProvider = StreamProvider.autoDispose<int>((ref) {
+  return Stream.periodic(Duration(seconds: 1), (count) => count);
+});
+```
+
+---
+
+## Use Cases
+
+* Firebase `snapshots()`
+* Live chat messages
+* IoT sensor feeds
+* Realtime game scores
+* Timer and stopwatch
 
 ---
