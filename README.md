@@ -336,6 +336,24 @@ Typical use cases include:
 * Sensor or hardware feeds
 
 ---
+# Stream :
+**What is a Stream in Flutter?**
+- A Stream is like a pipe through which data flows over time. It can send multiple pieces of data, one after the other, as they become available.
+- 
+Think of it like a water tap:
+You turn it on, and water (data) keeps coming drop by drop.
+
+You can listen to this tap and do something every time a new drop (new data) comes in.
+
+In Flutter, Streams are often used to handle things that change over time, such as:
+
+User location updates
+
+Network responses that take time
+
+Real-time messages
+
+You listen to a stream using .listen() or widgets like StreamBuilder.
 
 ## What is `StreamProvider`?
 
