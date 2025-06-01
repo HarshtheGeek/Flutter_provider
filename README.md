@@ -3,92 +3,62 @@
 This repository contains structured notes and examples on using **Riverpod** for state management in Flutter, including concepts like `copyWith`, various provider types, and widgets like `ConsumerWidget`.
 
 # FLUTTER CLEAN ARCHITECTURE
-Here is a simplified and beginner-friendly version of the explanation, written in clean GitHub `README.md` format with **no emojis** and **no complex terms**.
+
+### 1. **domain/** — *What your app should do*
+
+Think of this as the *idea* or *plan* of your travel app.
+
+* **entities/** — These are the main things you care about, like a **Trip**, **User**, or **Hotel**.
+  *Example:* A Trip might be "Visit Paris" with dates and places to see.
+* **repositories/** — These are like a *rulebook* telling what actions your app can do, without saying how to do them.
+  *Example:* “GetTrips()” means your app can get a list of trips, but it doesn’t say from where yet.
+* **usecases/** — These are *tasks* your app does, one at a time.
+  *Example:* “GetTrips” fetches trips, “LoginUser” lets someone log in.
 
 ---
 
-# Clean Architecture Folder Structure for Flutter Projects
+### 2. **data/** — *How data is handled*
 
-This folder structure helps you organize your Flutter project into different parts. It makes your app easier to build, test, and understand.
+This is where your app actually works with data—like getting trip info from the internet or saving it on your phone.
 
----
-
-## `lib/features/<feature_name>/`
-
-This is where each part (or feature) of your app lives. For example, you may have features like `login`, `profile`, or `trip`. Each feature will have its own folder.
-
-### 1. `domain/` – What the app should do
-
-This is where you write **what** your app does, not **how** it does it.
-
-* `entities/`
-  These are simple Dart classes that represent the main things in your app, like a `Trip`, `User`, or `Product`.
-
-* `repositories/`
-  These are just **rules** or **interfaces** that say what actions are possible (like `getTrips()`), without saying how those actions are done.
-
-* `usecases/`
-  Each file here does one specific thing like `GetTrips`, `LoginUser`, or `CheckPermission`. It connects the app’s logic together.
+* **models/** — These are versions of your entities that can easily be saved or sent over the internet (like packing your trip info into a suitcase to send it).
+* **datasources/** — These get data from somewhere real, like the internet or your phone’s storage.
+  *Example:* Fetching trips from a travel website API.
+* **repositories/** — These are the *real workers* that follow the rules from domain/repositories and use datasources to get or save data.
 
 ---
 
-### 2. `data/` – How data is handled
+### 3. **presentation/** — *What the user sees*
 
-This is where you write **how** your app gets and saves data.
+This is the *front desk* of your travel app — what people see and interact with.
 
-* `models/`
-  These are versions of your data that can be converted to and from JSON (for APIs, storage, etc.).
-
-* `datasources/`
-  These files get data from a specific place, like the internet or local storage.
-
-* `repositories/`
-  These are the actual working versions of the rules you made in `domain/repositories`. They use the `datasources` to get or save real data.
+* **providers/** — These help manage the data for the UI and update it when things change.
+  *Example:* When you add a new trip, the screen updates automatically.
+* **widgets/** — Small parts of the screen, like buttons or cards.
+  *Example:* A button that says “Add Trip” or a card showing trip details.
+* **pages/** — Full screens like the home page, profile page, or trip details page.
 
 ---
 
-### 3. `presentation/` – What the user sees
+### **lib/core/** — *Shared stuff across the app*
 
-This is where you build the user interface of your app.
+This is like the common tools and settings everyone uses.
 
-* `providers/`
-  These files help you manage and update the app’s data for the UI. You might use things like Provider or Riverpod here.
-
-* `widgets/`
-  These are small reusable pieces of UI like buttons, cards, or input fields.
-
-* `pages/`
-  These are full screens that the user sees, like a home page, trip page, or profile page.
+* **network/** — Settings for connecting to the internet (APIs).
+* **utils/** — Small helpers or constants used everywhere.
+  *Example:* A function to format dates or a color code used throughout the app.
 
 ---
 
-## `lib/core/`
+### Summary with real-world example:
 
-This is for code that is shared across the whole app.
+Imagine you’re building a travel planner:
 
-* `network/`
-  You can keep API settings or HTTP client setup here.
+* **domain/** is the travel plan itself (what trips you want).
+* **data/** is how you get trip info from the internet or save it on your phone.
+* **presentation/** is the travel brochure and booking desk where users see and interact with trips.
+* **core/** is the office tools everyone uses, like phones or computers that help the whole operation.
 
-* `utils/`
-  Small helper functions or constants that are used in many places.
-
----
-
-## `main.dart`
-
-This is the starting point of your app. It sets everything up, like routes and app settings.
-
----
-
-## Summary
-
-This structure separates your app into:
-
-* **What it does** → `domain/`
-* **How it works** → `data/`
-* **What users see** → `presentation/`
-* **Shared tools** → `core/`
-  
 ---
 
 ## Understanding `copyWith`
